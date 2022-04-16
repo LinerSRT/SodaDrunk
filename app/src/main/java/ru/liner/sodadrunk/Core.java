@@ -46,6 +46,12 @@ public class Core extends Application {
         System.out.println(Arrays.toString(generator.getSuggestions()));
     }
 
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        PM.put("control_enabled", false);
+    }
+
     public static Context getContext() {
         return context;
     }

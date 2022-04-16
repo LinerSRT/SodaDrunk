@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void handleChanged(Intent intent) {
                 localEnabled = intent.getAction().equals(Core.ACTION_SERVICE_STARTED);
+                PM.put("control_enabled", localEnabled);
                 refreshUI();
             }
         };
@@ -115,6 +116,8 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         generator.generate();
         serviceReceiver.setListening(true);
+        if (!localEnabled)
+            localEnabled = PM.get("control_enabled", false);
         refreshUI();
     }
 

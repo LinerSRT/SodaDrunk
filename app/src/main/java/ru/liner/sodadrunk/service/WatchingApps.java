@@ -45,4 +45,22 @@ public class WatchingApps {
             }
         });
     }
+
+    public interface TelecomApps {
+        String SAMSUNG_DIALER = "com.samsung.android.incallui";
+        String GOOGLE_DIALER = "com.google.android.dialer";
+        String ANDROID_DIALER = "com.android.dialer";
+        String SAMSUNG_MESSENGER = "com.samsung.android.messaging";
+        String GOOGLE_MESSENGER = "com.google.android.apps.messaging";
+
+        List<String> SUPPORTED_LIST = Collections.unmodifiableList(new ArrayList<String>() {
+            {
+                add(SAMSUNG_DIALER);
+                add(GOOGLE_DIALER);
+                add(ANDROID_DIALER);
+                add(SAMSUNG_MESSENGER);
+                add(GOOGLE_MESSENGER);
+            }
+        });
+    }
 }

@@ -51,13 +51,13 @@ public class AccessUtils {
         return accessibilityNodeInfo.getParent() != null ? getParent(accessibilityNodeInfo.getParent()) : accessibilityNodeInfo;
     }
 
-
+    @NonNull
     public static String getCurrentActivity(Context context, AccessibilityEvent accessibilityEvent) {
         ComponentName componentName = new ComponentName(accessibilityEvent.getPackageName().toString(), accessibilityEvent.getClassName().toString());
         if (System.getActivityInfo(context, componentName) != null) {
             return componentName.flattenToShortString();
         }
-        return null;
+        return "";
     }
 
     public static String getItemText(AccessibilityNodeInfo accessibilityNodeInfo, Integer[] numArr) {

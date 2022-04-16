@@ -71,4 +71,10 @@ public class BlockingContactConfigureActivity extends AppCompatActivity {
     public void onBackPressed() {
 
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
+    }
 }

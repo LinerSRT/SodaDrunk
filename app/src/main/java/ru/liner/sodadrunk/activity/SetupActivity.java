@@ -106,4 +106,10 @@ public class SetupActivity extends AppCompatActivity {
             cursor.close();
         }
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
+    }
 }

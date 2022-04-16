@@ -24,7 +24,7 @@ import ru.liner.sodadrunk.utils.System;
 @SuppressLint("WrongConstant | MissingPermission")
 public class ControlService extends AccessibilityService {
     private static final String TAG = ControlService.class.getSimpleName();
-    private static final boolean enableLogging = true;
+    private static final boolean enableLogging = false;
     private static ControlService service;
     private AccessibilityNodeInfo lastNode;
     private AccessibilityEvent lastEvent;
@@ -35,7 +35,6 @@ public class ControlService extends AccessibilityService {
     public void onCreate() {
         super.onCreate();
         PM.init(getBaseContext(), "soda_prefs");
-        Broadcast.send(Core.ACTION_SERVICE_STARTED);
     }
 
     @Override
@@ -94,7 +93,8 @@ public class ControlService extends AccessibilityService {
                 Log.d(TAG, "Remove device admin detected, blocking...");
             performGlobalAction(GLOBAL_ACTION_HOME);
         }
-        if(WatchingApps.DiallerQuery.SUPPORTED_LIST.contains(packageName)){
+
+        if (WatchingApps.DiallerQuery.SUPPORTED_LIST.contains(packageName) || WatchingApps.DiallerQuery.SUPPORTED_LIST.contains(activityName.replace("/", ""))) {
             if (enableLogging)
                 Log.d(TAG, "Detected dialer action...");
             try {
@@ -114,7 +114,7 @@ public class ControlService extends AccessibilityService {
                 if (enableLogging)
                     Log.d(TAG, "An error occur while ending call");
             }
-        } else if(WatchingApps.MessagingQuery.SUPPORTED_LIST.contains(packageName)){
+        } else if (WatchingApps.MessagingQuery.SUPPORTED_LIST.contains(packageName) || WatchingApps.MessagingQuery.SUPPORTED_LIST.contains(activityName.replace("/", ""))) {
             if (enableLogging)
                 Log.d(TAG, "Detected messenger action...");
             for (BlockedContact blockedContact : Core.getBlockedContacts()) {
