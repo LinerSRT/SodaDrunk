@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:accessibilityEventTypes="typeViewClicked|typeViewLongClicked|typeViewSelected|typeViewFocused|typeViewTextChanged|typeWindowStateChanged|typeNotificationStateChanged|typeViewHoverEnter|typeViewHoverExit|typeTouchExplorationGestureStart|typeTouchExplorationGestureEnd|typeWindowContentChanged|typeViewScrolled|typeViewTextSelectionChanged|typeAnnouncement|typeViewAccessibilityFocused|typeViewAccessibilityFocusCleared|typeViewTextTraversedAtMovementGranularity|typeGestureDetectionStart|typeGestureDetectionEnd|typeTouchInteractionStart|typeTouchInteractionEnd|typeWindowsChanged|typeContextClicked|typeAssistReadingContext|typeAllMask"
+    android:accessibilityFeedbackType="feedbackAllMask"
+    android:accessibilityFlags="flagDefault"
+    android:canPerformGestures="true"
+    android:canRetrieveWindowContent="true"
+    android:description="@string/control_service_description"
+    android:notificationTimeout="100"
+    tools:targetApi="n" />

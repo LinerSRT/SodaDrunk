@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="accentColor">#067AD6</color>
+    <color name="accentColorSecondary">#0661A8</color>
+    <color name="accentColorDisabled">#4A6173</color>
+    <color name="windowBackgroundColor">#2D8DD8</color>
+    <color name="textColor">#FFFFFFFF</color>
+    <color name="textColorDisabled">#AAAAAA</color>
+    <color name="textColorSecondary">#D8D6D6</color>
+    <color name="textColorOnWhite">#1B1B1B</color>
+    <color name="white">#ffffff</color>
+    <color name="red">#F44336</color>
+    <color name="redDark">#C6372C</color>
+    <color name="green">#4CAF50</color>
+    <color name="greenDark">#3A833D</color>
+
+</resources>

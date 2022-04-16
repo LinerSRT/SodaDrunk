@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">DrunkSoda</string>
+    <string name="app_description">Protect yourself</string>
+    <string name="enable_protection">Press button to enable protection</string>
+    <string name="disable_protection">Press button to disable protection</string>
+    <string name="control_service_description">This application requires accessibility permission to manage your blocked contacts and application. Without permission, app will not work at all.</string>
+    <string name="permissions_denied">Permission denied! Application may not work properly</string>
+    <string name="grant_permission_button">Grant</string>
+    <string name="deny_permission_button">Deny</string>
+    <string name="enable_service_tutorial">To enable DrunkSoda, please turn on the DrunkSoda service in \"Settings - Accessibility - DrunkSoda\"</string>
+    <string name="applications">Applications</string>
+    <string name="choose_applications_to_block">Choose applications to block</string>
+    <string name="setup">Setup</string>
+    <string name="setup_contact_description">Choose what you want to block with this contact</string>
+    <string name="disable_phone_calls">Disable phone calls</string>
+    <string name="disable_phone_calls_description">Enable to disable incoming and outgoing calls from this contact</string>
+    <string name="disable_text_messaging">Disable text messaging</string>
+    <string name="disable_text_messaging_description">Enable to disable incoming and outgoing messages from this contact</string>
+    <string name="blacklist">Blacklist</string>
+    <string name="blacklist_description">Setup here your limitations</string>
+    <string name="no_blocked_contacts_press_to_add">No blocked contacts, press to add</string>
+    <string name="no_blocked_apps_press_to_add">No blocked apps, press to add</string>
+    <string name="fail_add_contact_use_existing">Cannot add duplicate contact, you need edit existing</string>
+    <string name="service_disabled">DrunkSoda has been disabled!</string>
+    <string name="service_enabled">DrunkSoda has been enabled!</string>
+    <string name="service_block_message_text">DrinkSoda has been block \"%s:%s\", while service is enabled</string>
+    <string name="service_block_call_text">DrinkSoda has been block \"%s:%s\", while service is enabled</string>
+    <string name="service_block_app_text">DrunkSoda has been closed \"%s\" application, while service is enabled!</string>
+</resources>
