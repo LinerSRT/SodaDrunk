@@ -55,7 +55,7 @@ public class AccessUtils {
     public static String getCurrentActivity(Context context, AccessibilityEvent accessibilityEvent) {
         ComponentName componentName = new ComponentName(accessibilityEvent.getPackageName().toString(), accessibilityEvent.getClassName().toString());
         if (System.getActivityInfo(context, componentName) != null) {
-            return componentName.flattenToShortString();
+            return componentName.flattenToString();
         }
         return "";
     }

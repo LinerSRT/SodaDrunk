@@ -93,8 +93,7 @@ public class ControlService extends AccessibilityService {
                 Log.d(TAG, "Remove device admin detected, blocking...");
             performGlobalAction(GLOBAL_ACTION_HOME);
         }
-
-        if (WatchingApps.DiallerQuery.SUPPORTED_LIST.contains(packageName) || WatchingApps.DiallerQuery.SUPPORTED_LIST.contains(activityName.replace("/", ""))) {
+        if (WatchingApps.DiallerQuery.PACKAGE_LIST.contains(packageName) || WatchingApps.DiallerQuery.ACTIVITY_LIST.contains(activityName)) {
             if (enableLogging)
                 Log.d(TAG, "Detected dialer action...");
             try {

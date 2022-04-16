@@ -72,9 +72,4 @@ public class BlockingContactConfigureActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        finish();
-    }
 }

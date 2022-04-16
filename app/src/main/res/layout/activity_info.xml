@@ -7,6 +7,19 @@
     android:background="@color/windowBackgroundColor"
     tools:context=".activity.MainActivity">
 
+
+    <ImageView
+        android:id="@+id/info_backButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="8dp"
+        android:padding="4dp"
+        android:src="@drawable/ic_baseline_arrow_back_24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
+
+
     <TextView
         android:id="@+id/main_appNameText"
         android:layout_width="wrap_content"
@@ -35,18 +48,48 @@
 
 
     <TextView
+        android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:text="This is a free application that allows you to configure the blocking of unwanted calls, SMS and apps in convenient way"
-        android:textColor="@color/textColorSecondary"
+        android:text="@string/app_info_description"
+        android:textColor="@color/textColor"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/main_appDescriptionText"
         app:layout_constraintVertical_bias="0.13999999" />
+
+    <TextView
+        android:id="@+id/emailCopy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:text="If you have any questions please contact me on fazafarlex@gmail.com"
+        android:textColor="@color/textColor"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_appDescriptionText"
+        app:layout_constraintVertical_bias="0.8" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:layout_marginEnd="32dp"
+        android:text="(tap to copy)"
+        android:textColor="@color/textColorSecondary"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/emailCopy" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
