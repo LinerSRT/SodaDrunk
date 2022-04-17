@@ -12,9 +12,11 @@ import java.util.List;
 public class WatchingApps {
     public interface AdminControl {
         String DEVICE_ADMIN_DISABLE = "com.android.settings/.applications.specialaccess.deviceadmin.DeviceAdminAdd";
-        List<String> SUPPORTED_LIST = Collections.unmodifiableList(new ArrayList<String>() {
+        String DEVICE_ADMIN_DISABLE2 = "com.android.settings/com.android.settings.applications.specialaccess.deviceadmin.DeviceAdminAdd";
+        List<String> SUPPORTED_LIST = Collections.synchronizedList(new ArrayList<String>() {
             {
                 add(DEVICE_ADMIN_DISABLE);
+                add(DEVICE_ADMIN_DISABLE2);
             }
         });
     }
@@ -26,7 +28,7 @@ public class WatchingApps {
         String GOOGLE_MESSENGER_CONVERSATION = "com.google.android.apps.messaging.ui.conversation.ConversationActivity";
         String HUAWEI_MESSENGER = "com.android.mms.ui.ConversationList";
         String HUAWEI_MESSENGER_VER1 = "com.android.mms.ui.ComposeMessageActivity";
-        List<String> SUPPORTED_LIST = Collections.unmodifiableList(new ArrayList<String>() {
+        List<String> SUPPORTED_LIST = Collections.synchronizedList(new ArrayList<String>() {
             {
                 add(SAMSUNG_MESSENGER);
                 add(GOOGLE_MESSENGER);
@@ -53,7 +55,7 @@ public class WatchingApps {
         String XIAOMI_DIALER_COMPAT = "com.android.contacts/com.android.contacts.activities.TwelveKeyDialer";
 
 
-        List<String> ACTIVITY_LIST = Collections.unmodifiableList(new ArrayList<String>() {
+        List<String> ACTIVITY_LIST = Collections.synchronizedList(new ArrayList<String>() {
             {
                 add(DEFAULT_DIALER);
                 add(GOOGLE_DIALER);
@@ -69,7 +71,7 @@ public class WatchingApps {
                 add(XIAOMI_DIALER_COMPAT);
             }
         });
-        List<String> PACKAGE_LIST = Collections.unmodifiableList(new ArrayList<String>() {
+        List<String> PACKAGE_LIST = Collections.synchronizedList(new ArrayList<String>() {
             {
                 add(DEFAULT_DIALER.split("/")[0]);
                 add(GOOGLE_DIALER.split("/")[0]);

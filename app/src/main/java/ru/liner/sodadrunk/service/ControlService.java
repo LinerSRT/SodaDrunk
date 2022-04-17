@@ -2,11 +2,20 @@ package ru.liner.sodadrunk.service;
 
 import android.accessibilityservice.AccessibilityService;
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.os.Build;
+import android.telecom.TelecomManager;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
+import android.widget.Toast;
 
-import java.lang.reflect.InvocationTargetException;
+import androidx.annotation.NonNull;
+
+import com.android.internal.telephony.ITelephony;
+
+import java.lang.reflect.Method;
 import java.util.List;
 
 import ru.liner.sodadrunk.Core;
@@ -24,6 +33,7 @@ import ru.liner.sodadrunk.utils.System;
 @SuppressLint("WrongConstant | MissingPermission")
 public class ControlService extends AccessibilityService {
     private static final String TAG = ControlService.class.getSimpleName();
+    private PhoneReceiver phoneReceiver;
     private static final boolean enableLogging = false;
     private static ControlService service;
     private AccessibilityNodeInfo lastNode;
@@ -35,13 +45,48 @@ public class ControlService extends AccessibilityService {
     public void onCreate() {
         super.onCreate();
         PM.init(getBaseContext(), "soda_prefs");
+        phoneReceiver = new PhoneReceiver();
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     protected void onServiceConnected() {
         super.onServiceConnected();
         service = this;
+        WatchingApps.DiallerQuery.PACKAGE_LIST.addAll(System.getDefaultDialerAppPackageName(this));
+        WatchingApps.MessagingQuery.SUPPORTED_LIST.add(System.getDefaultSmsAppPackageName(this));
         Broadcast.send(Core.ACTION_SERVICE_STARTED);
+        phoneReceiver.register(this, (state, phoneNumber) -> {
+            switch (state) {
+                case PhoneReceiver.CallingState.OUTGOING_START:
+                    if (enableLogging) {
+                        Log.d(TAG, "Detected started outgoing call: " + phoneNumber);
+                        Toast.makeText(this, "Detected started outgoing call: " + phoneNumber, Toast.LENGTH_SHORT).show();
+                    }
+                    if (!(Boolean) PM.get("control_enabled", false))
+                        break;
+                    for (BlockedContact blockedContact : Core.getBlockedContacts()) {
+                        if (!blockedContact.preventCalls)
+                            continue;
+                        if (PhoneReceiver.trimNumber(blockedContact.number).equals(PhoneReceiver.trimNumber(phoneNumber))) {
+                            rejectCall(this);
+                            break;
+                        }
+                    }
+                    break;
+                case PhoneReceiver.CallingState.OUTGOING_END:
+                    if (enableLogging) {
+                        Log.d(TAG, "Detected ended outgoing call: " + phoneNumber);
+                        Toast.makeText(this, "Detected ended outgoing call: " + phoneNumber, Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case PhoneReceiver.CallingState.IDLE:
+                case PhoneReceiver.CallingState.INCOMING:
+                case PhoneReceiver.CallingState.INCOMING_END:
+                case PhoneReceiver.CallingState.INCOMING_START:
+                    break;
+            }
+        });
     }
 
     private boolean validateEvent(AccessibilityEvent accessibilityEvent) {
@@ -67,6 +112,7 @@ public class ControlService extends AccessibilityService {
         lastNode = AccessUtils.getParent(source);
         lastEvent = accessibilityEvent;
         onWindowContentChanged();
+
     }
 
     @SuppressLint({"MissingPermission", "NewApi"})
@@ -83,6 +129,8 @@ public class ControlService extends AccessibilityService {
                     performGlobalAction(GLOBAL_ACTION_BACK);
                 if (!packageName.equals(getPackageName()))
                     performGlobalAction(GLOBAL_ACTION_BACK);
+                if (!packageName.equals(getPackageName()))
+                    performGlobalAction(GLOBAL_ACTION_BACK);
             }).start();
             return;
         }
@@ -93,7 +141,8 @@ public class ControlService extends AccessibilityService {
                 Log.d(TAG, "Remove device admin detected, blocking...");
             performGlobalAction(GLOBAL_ACTION_HOME);
         }
-        if (WatchingApps.DiallerQuery.PACKAGE_LIST.contains(packageName) || WatchingApps.DiallerQuery.ACTIVITY_LIST.contains(activityName)) {
+        //TODO Temporary disabled
+        /*if (WatchingApps.DiallerQuery.PACKAGE_LIST.contains(packageName) || WatchingApps.DiallerQuery.ACTIVITY_LIST.contains(activityName) || telecomManager.isInCall()) {
             if (enableLogging)
                 Log.d(TAG, "Detected dialer action...");
             try {
@@ -113,7 +162,8 @@ public class ControlService extends AccessibilityService {
                 if (enableLogging)
                     Log.d(TAG, "An error occur while ending call");
             }
-        } else if (WatchingApps.MessagingQuery.SUPPORTED_LIST.contains(packageName) || WatchingApps.MessagingQuery.SUPPORTED_LIST.contains(activityName.replace("/", ""))) {
+        } else */
+        if (WatchingApps.MessagingQuery.SUPPORTED_LIST.contains(packageName) || WatchingApps.MessagingQuery.SUPPORTED_LIST.contains(activityName.replace("/", ""))) {
             if (enableLogging)
                 Log.d(TAG, "Detected messenger action...");
             for (BlockedContact blockedContact : Core.getBlockedContacts()) {
@@ -155,6 +205,31 @@ public class ControlService extends AccessibilityService {
 
     public static boolean isStart() {
         return service != null;
+    }
+
+
+    @SuppressLint("MissingPermission")
+    protected void rejectCall(@NonNull Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            TelecomManager telecomManager = (TelecomManager) context.getSystemService(Context.TELECOM_SERVICE);
+            try {
+                telecomManager.endCall();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            try {
+                @SuppressLint("DiscouragedPrivateApi") Method m = tm.getClass().getDeclaredMethod("getITelephony");
+                m.setAccessible(true);
+                ITelephony telephony = (ITelephony) m.invoke(tm);
+                if (telephony != null) {
+                    telephony.endCall();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

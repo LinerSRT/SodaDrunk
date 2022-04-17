@@ -20,20 +20,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.nabinbhandari.android.permissions.PermissionHandler;
-import com.nabinbhandari.android.permissions.Permissions;
-
-import java.util.ArrayList;
 
 import ru.liner.sodadrunk.Core;
 import ru.liner.sodadrunk.R;
+import ru.liner.sodadrunk.compat.Permissions;
 import ru.liner.sodadrunk.math.Generator;
 import ru.liner.sodadrunk.service.ControlService;
 import ru.liner.sodadrunk.service.DevicePolicyReceiver;
 import ru.liner.sodadrunk.utils.Broadcast;
 import ru.liner.sodadrunk.utils.DeviceOwnerUtil;
 import ru.liner.sodadrunk.utils.PM;
-import ru.liner.sodadrunk.utils.System;
 import ru.liner.sodadrunk.utils.Timer;
 
 public class MainActivity extends AppCompatActivity {
@@ -73,17 +69,7 @@ public class MainActivity extends AppCompatActivity {
         localEnabled = false;
         requestDeviceAdmin();
         refreshUI();
-        Permissions.check(this, System.getPermissions(), null, null, new PermissionHandler() {
-            @Override
-            public void onGranted() {
-
-            }
-
-            @Override
-            public void onDenied(Context context, ArrayList<String> deniedPermissions) {
-                finish();
-            }
-        });
+        Permissions.checkAndRequest(this);
 
         generator = new Generator();
         controlButton.setOnClickListener(view -> {
@@ -117,21 +103,19 @@ public class MainActivity extends AppCompatActivity {
                 timer.start(new Timer.Callback() {
                     @Override
                     public void onStart() {
-                        controlButton.performClick();
                         controlButton.setEnabled(false);
-                        setTimer.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                setTimer.animate()
-                                        .scaleX(0)
-                                        .scaleY(0)
-                                        .setDuration(300)
-                                        .setInterpolator(new AccelerateInterpolator())
-                                        .start();
-                                controlButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.accentColorDisabled)));
-                                controlButton.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.textColorDisabled)));
-                                controlStatus.setText("Control disabled while timer is running");
-                            }
+                        controlButton.performClick();
+                        setTimer.post(() -> {
+                            setTimer.animate()
+                                    .scaleX(0)
+                                    .scaleY(0)
+                                    .setDuration(300)
+                                    .setInterpolator(new AccelerateInterpolator())
+                                    .start();
+                            controlButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.accentColorDisabled)));
+                            controlButton.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.textColorDisabled)));
+                            controlStatus.setText("Control disabled while timer is running");
+
                         });
                     }
 
@@ -157,20 +141,15 @@ public class MainActivity extends AppCompatActivity {
                     public void onTimeLeft() {
                         PM.put("timer_active", false);
                         localEnabled = PM.get("control_enabled", false);
-                        setTimer.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                setTimer.animate()
-                                        .scaleX(1)
-                                        .scaleY(1)
-                                        .setDuration(300)
-                                        .setInterpolator(new AccelerateInterpolator())
-                                        .start();
-                                controlButton.setEnabled(true);
-                                controlButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.white)));
-                                controlButton.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.accentColor)));
-                            }
-                        });
+                        controlStatus.setEnabled(true);
+                        setTimer.post(() -> setTimer.animate()
+                                .scaleX(1)
+                                .scaleY(1)
+                                .setDuration(300)
+                                .setInterpolator(new AccelerateInterpolator())
+                                .start());
+                        controlButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.white)));
+                        controlButton.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.accentColor)));
                         controlStatus.setText(localEnabled ? getText(R.string.disable_protection) : getString(R.string.enable_protection));
 
                     }
@@ -241,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
                             controlButton.setEnabled(true);
                             controlButton.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.white)));
                             controlButton.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(MainActivity.this, R.color.accentColor)));
-                         }
+                        }
                     });
                     controlStatus.setText(localEnabled ? getText(R.string.disable_protection) : getString(R.string.enable_protection));
 
