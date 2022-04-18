@@ -16,6 +16,8 @@ import androidx.annotation.RequiresPermission;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+import ru.liner.sodadrunk.utils.Telecom;
+
 /**
  * @author : "Line'R"
  * @mailto : serinity320@mail.com
@@ -40,7 +42,7 @@ public class PhoneReceiver extends BroadcastReceiver {
             outgoingCall = true;
             String outgoingNumber = intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
             if (!isEmpty(outgoingNumber)) {
-                receivedNumber = trimNumber(outgoingNumber);
+                receivedNumber = Telecom.trimNumber(outgoingNumber);
                 callingState = CallingState.OUTGOING_START;
                 if (callback != null)
                     callback.onStateChanged(callingState, receivedNumber);
@@ -49,7 +51,7 @@ public class PhoneReceiver extends BroadcastReceiver {
             String stringState = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
             String phoneNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
             if (!isEmpty(phoneNumber)) {
-                receivedNumber = trimNumber(phoneNumber);
+                receivedNumber = Telecom.trimNumber(phoneNumber);
                 switch (stringState) {
                     case RINGING:
                         callingState = CallingState.INCOMING_START;
@@ -116,14 +118,7 @@ public class PhoneReceiver extends BroadcastReceiver {
         return string == null || string.length() == 0;
     }
 
-    public static String trimNumber(@NonNull String number) {
-        return number
-                .replace(" ", "")
-                .replace("(", "")
-                .replace(")", "")
-                .replace("-", "")
-                .replace("+", "");
-    }
+
 
     @IntDef({CallingState.INCOMING_START, CallingState.INCOMING, CallingState.INCOMING_END, CallingState.OUTGOING_START, CallingState.OUTGOING_END, CallingState.IDLE})
     @Retention(RetentionPolicy.SOURCE)

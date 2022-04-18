@@ -24,6 +24,7 @@ import ru.liner.sodadrunk.model.BlockedContact;
 import ru.liner.sodadrunk.utils.Broadcast;
 import ru.liner.sodadrunk.utils.PM;
 import ru.liner.sodadrunk.utils.System;
+import ru.liner.sodadrunk.utils.Telecom;
 
 /**
  * @author : "Line'R"
@@ -59,27 +60,18 @@ public class ControlService extends AccessibilityService {
         phoneReceiver.register(this, (state, phoneNumber) -> {
             switch (state) {
                 case PhoneReceiver.CallingState.OUTGOING_START:
-                    if (enableLogging) {
-                        Log.d(TAG, "Detected started outgoing call: " + phoneNumber);
-                        Toast.makeText(this, "Detected started outgoing call: " + phoneNumber, Toast.LENGTH_SHORT).show();
-                    }
                     if (!(Boolean) PM.get("control_enabled", false))
                         break;
                     for (BlockedContact blockedContact : Core.getBlockedContacts()) {
                         if (!blockedContact.preventCalls)
                             continue;
-                        if (PhoneReceiver.trimNumber(blockedContact.number).equals(PhoneReceiver.trimNumber(phoneNumber))) {
-                            rejectCall(this);
+                        if (Telecom.trimNumber(blockedContact.number).equals(Telecom.trimNumber(phoneNumber))) {
+                            Telecom.rejectCall(this);
                             break;
                         }
                     }
                     break;
                 case PhoneReceiver.CallingState.OUTGOING_END:
-                    if (enableLogging) {
-                        Log.d(TAG, "Detected ended outgoing call: " + phoneNumber);
-                        Toast.makeText(this, "Detected ended outgoing call: " + phoneNumber, Toast.LENGTH_SHORT).show();
-                    }
-                    break;
                 case PhoneReceiver.CallingState.IDLE:
                 case PhoneReceiver.CallingState.INCOMING:
                 case PhoneReceiver.CallingState.INCOMING_END:
@@ -193,6 +185,7 @@ public class ControlService extends AccessibilityService {
         service = null;
         PM.put("control_enabled", false);
         Broadcast.send(Core.ACTION_SERVICE_STOPPED);
+        phoneReceiver.unregister(this);
     }
 
     @Override
@@ -201,35 +194,10 @@ public class ControlService extends AccessibilityService {
         service = null;
         PM.put("control_enabled", false);
         Broadcast.send(Core.ACTION_SERVICE_STOPPED);
+        phoneReceiver.unregister(this);
     }
 
     public static boolean isStart() {
         return service != null;
     }
-
-
-    @SuppressLint("MissingPermission")
-    protected void rejectCall(@NonNull Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            TelecomManager telecomManager = (TelecomManager) context.getSystemService(Context.TELECOM_SERVICE);
-            try {
-                telecomManager.endCall();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-            try {
-                @SuppressLint("DiscouragedPrivateApi") Method m = tm.getClass().getDeclaredMethod("getITelephony");
-                m.setAccessible(true);
-                ITelephony telephony = (ITelephony) m.invoke(tm);
-                if (telephony != null) {
-                    telephony.endCall();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
 }
