@@ -11,12 +11,7 @@ Also can restrict access to specified apps from device.
 - **This project uses accessibility service for blocking apps and detecting messaging activity with specified contact**
 - **This project uses broadcast receiver to receive outgoing calls, rejecting them with several methods**
 
-<img src="https://github.com/LinerSRT/SodaDrunk/blob/master/media/1.png?raw=true" height="500">
-<img src="https://github.com/LinerSRT/SodaDrunk/blob/master/media/2.png?raw=true" height="500">
-<img src="https://github.com/LinerSRT/SodaDrunk/blob/master/media/3.png?raw=true" height="500">
-<img src="https://github.com/LinerSRT/SodaDrunk/blob/master/media/4.png?raw=true" height="500">
-<img src="https://github.com/LinerSRT/SodaDrunk/blob/master/media/5.png?raw=true" height="500">
-<img src="https://github.com/LinerSRT/SodaDrunk/blob/master/media/6.png?raw=true" height="500">
+<img src="https://github.com/LinerSRT/SodaDrunk/blob/master/media/2.png?raw=true" height="400"><img src="https://github.com/LinerSRT/SodaDrunk/blob/master/media/3.png?raw=true" height="400"><img src="https://github.com/LinerSRT/SodaDrunk/blob/master/media/4.png?raw=true" height="400"><img src="https://github.com/LinerSRT/SodaDrunk/blob/master/media/5.png?raw=true" height="400"><img src="https://github.com/LinerSRT/SodaDrunk/blob/master/media/6.png?raw=true" height="400">
 
 ## License
 Licensed under the Apache License, Version 2.0
